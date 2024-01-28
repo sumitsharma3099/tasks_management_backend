@@ -33,7 +33,7 @@ class TasksController < ApplicationController
 
     # Function to List Tasks according to status.
     def index
-        tasks = current_user.tasks_list(params[:for_status])
+        tasks = @current_user.tasks_list(params[:for_status], params[:search_text], params[:sort_by], params[:sort_direction])
         tasks = ActiveModel::SerializableResource.new(tasks, each_serializer: TaskSerializer).as_json
         render_success(tasks)
     end

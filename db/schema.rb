@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_25_195354) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_28_141006) do
   create_table "tasks", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -26,6 +26,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_195354) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "profile_pic_url", default: "https://i.stack.imgur.com/l60Hf.png"
   end
 
 end
