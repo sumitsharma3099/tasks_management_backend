@@ -1,8 +1,12 @@
 class User < ApplicationRecord
     has_secure_password
     has_many :tasks
-    validates :full_name, :email, presence: true
+    validates :full_name, :email, :password, presence: true
     validates :email, uniqueness: true
+    validates :full_name, length: { maximum: 20 }
+    validates :email, length: { maximum: 25 }
+    validates :profile_pic_url, length: { maximum: 300 }
+
 
     # This function is used to fetch user tasks according to their status.
     def tasks_list(for_status, search_text, sort_by, sort_direction)

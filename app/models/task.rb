@@ -1,8 +1,19 @@
 class Task < ApplicationRecord
     enum status: { "To Do": 1, "In Progress": 2, "Done": 3 }
     validates :title, :description, presence: true
-    belongs_to :user
+    validates :title, length: { maximum: 500 }
+    validates :description, length: { maximum: 200 }
     validate :validate_todo_limit, on: :create
+    belongs_to :user
+    
+
+    def sort_title
+      title.truncate(15)
+    end
+  
+    def sort_description
+      description.truncate(15)
+    end
 
     private
   
