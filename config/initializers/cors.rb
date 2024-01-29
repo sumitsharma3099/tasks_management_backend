@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "https://tasks-management-backend.onrender.com"
+    origins "https://tasks-management-frontend.onrender.com"
 
     resource "*",
       headers: :any,
