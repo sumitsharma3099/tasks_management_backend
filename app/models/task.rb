@@ -8,11 +8,11 @@ class Task < ApplicationRecord
     
 
     def sort_title
-      title.truncate(15)
+      title.truncate(10)
     end
   
     def sort_description
-      description.truncate(15)
+      description.truncate(10)
     end
 
     private

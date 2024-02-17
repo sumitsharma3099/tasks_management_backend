@@ -49,3 +49,4 @@ end
 gem "jwt"
 gem "active_model_serializers"
 
+gem "will_paginate"

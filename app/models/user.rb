@@ -9,20 +9,17 @@ class User < ApplicationRecord
 
 
     # This function is used to fetch user tasks according to their status.
-    def tasks_list(for_status, search_text, sort_by, sort_direction)
-        sort_by = "created_at" if sort_by.blank? ||sort_by.nil?
-        sort_direction = "ASC" if sort_direction.blank? ||sort_direction.nil?
-        order_by_str = sort_by + " " + sort_direction
+    def tasks_list(for_status, search_text)
         for_status ||= "All"
         if search_text.present?
             if for_status == "All"
-                self.tasks.where("title LIKE ? OR description LIKE ?", "%#{search_text}%", "%#{search_text}%").order(order_by_str)
+                self.tasks.where("title LIKE ? OR description LIKE ?", "%#{search_text}%", "%#{search_text}%")
             else
-                self.tasks.where(status: for_status).where("title LIKE ? OR description LIKE ?", "%#{search_text}%", "%#{search_text}%").order(order_by_str)
+                self.tasks.where(status: for_status).where("title LIKE ? OR description LIKE ?", "%#{search_text}%", "%#{search_text}%")
             end
         else
-            return self.tasks.order(order_by_str) if for_status == "All"
-            self.tasks.where(status: for_status).order(order_by_str)
+            return self.tasks if for_status == "All"
+            self.tasks.where(status: for_status)
         end
     end
 end

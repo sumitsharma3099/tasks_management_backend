@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
     before_action :authenticate_user
     before_action :fetch_task, only: [:update, :show, :destroy]
+    before_action :set_params, only: [ :index ]
 
     # Function is Used to Create Tasks.
     def create
@@ -33,9 +34,12 @@ class TasksController < ApplicationController
 
     # Function to List Tasks according to status.
     def index
-        tasks = @current_user.tasks_list(params[:for_status], params[:search_text], params[:sort_by], params[:sort_direction])
-        tasks = ActiveModel::SerializableResource.new(tasks, each_serializer: TaskSerializer).as_json
-        render_success(tasks)
+        order_by_str = params[:sort_by] + " " + params[:sort_direction]
+        tasks = @current_user.tasks_list(params[:for_status], params[:search_text])
+        pagination_hash = set_pagination_hash tasks
+        tasks = ActiveModel::SerializableResource.new(tasks.paginate(page: params[:page], per_page: params[:per_page]).order(order_by_str), each_serializer: TaskSerializer).as_json
+        data = {tasks: tasks, pagination_hash: pagination_hash}
+        render_success(data)
     end
 
     # Function to delete the Tasks.
@@ -53,6 +57,22 @@ class TasksController < ApplicationController
     # Function to fetch task for show, update and delete fucntion.
     def fetch_task
         @task = @current_user.tasks.find_by_id(params[:id])
+    end
+
+    def set_params
+        params[:page] = 1 if params[:page].blank? || params[:page].nil?
+        params[:per_page] = 5 if params[:per_page].blank? || params[:per_page].nil?
+        params[:sort_by] = "created_at" if params[:sort_by].blank? || params[:sort_by].nil?
+        params[:sort_direction] = "ASC" if params[:sort_direction].blank? || params[:sort_direction].nil?
+    end
+
+    def set_pagination_hash tasks
+        total_records = tasks.count
+        page = params[:page].to_i
+        per_page = params[:per_page].to_i
+        total_pages = total_records/per_page
+        total_pages = total_records%per_page == 0 ? total_pages : (total_pages + 1)
+        {total_records: total_records, page: page, per_page: per_page, total_pages: total_pages}
     end
 
     def task_params
