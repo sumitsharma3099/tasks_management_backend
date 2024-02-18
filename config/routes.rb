@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   # Route to SignUp or Create new user. 
   post "/signup", to: "users#create"
+  put "/update_user", to: "users#update"
 
   # Route to login by user credentials.
   post "/login", to: "sessions#create"
